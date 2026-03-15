@@ -157,10 +157,19 @@ class Spilt_MCP_Auto_Updater {
      * Fetch and cache the remote manifest.
      */
     private function get_remote_manifest() {
+        // If force-check is requested (update-core.php?force-check=1), skip cache
+        if ( ! empty( $_GET['force-check'] ) ) {
+            delete_transient( $this->cache_key );
+        }
+
         $cached = get_transient( $this->cache_key );
 
-        if ( $cached !== false ) {
+        if ( false !== $cached && 'error' !== $cached ) {
             return $cached;
+        }
+
+        if ( 'error' === $cached ) {
+            return null;
         }
 
         $response = wp_remote_get( $this->manifest_url, array(
@@ -172,15 +181,15 @@ class Spilt_MCP_Auto_Updater {
         ) );
 
         if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-            // Cache the failure for 1 hour so we don't hammer the server
-            set_transient( $this->cache_key, null, 3600 );
+            // Cache the failure briefly (10 min) so we don't hammer the server
+            set_transient( $this->cache_key, 'error', 600 );
             return null;
         }
 
         $body = json_decode( wp_remote_retrieve_body( $response ) );
 
         if ( ! $body || ! isset( $body->version ) || ! isset( $body->download_url ) ) {
-            set_transient( $this->cache_key, null, 3600 );
+            set_transient( $this->cache_key, 'error', 600 );
             return null;
         }
 
