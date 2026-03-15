@@ -106,7 +106,6 @@ class Spilt_MCP_Preflight_API {
 
         $required_plugins = array(
             'seo-by-rank-math' => 'Rank Math SEO',
-            'litespeed-cache'  => 'LiteSpeed Cache',
         );
         $optional_plugins = array(
             'spilt-mcp-bridge' => 'Spilt MCP Bridge',

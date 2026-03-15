@@ -1,10 +1,10 @@
 {
-    "version": "1.3.0",
-    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v1.3.0/spilt-mcp-bridge.zip",
+    "version": "1.3.1",
+    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v1.3.1/spilt-mcp-bridge.zip",
     "homepage": "https://github.com/spiltmedia/spilt-mcp-bridge",
     "requires": "5.6",
     "requires_php": "7.4",
     "tested": "6.7",
     "last_updated": "2026-03-15",
-    "changelog": "<h4>v1.3.0 (2026-03-15)</h4><ul><li><strong>New:</strong> Post Dates endpoint — override modified/published dates via direct DB (backfill support)</li><li><strong>New:</strong> Bulk Post Dates — batch update dates for up to 100 posts</li><li><strong>New:</strong> Post Audit — single-call health check (content, SEO, schema, links, word count, featured image)</li><li><strong>New:</strong> Sideload Media — upload image from URL or base64 and set as featured image in one call</li><li><strong>New:</strong> Preflight — site readiness check (permalinks, categories, AI bot access, plugins, Rank Math config)</li><li><strong>New:</strong> Auto-updater — plugin now checks for updates from GitHub releases</li></ul><h4>v1.1.2</h4><ul><li>Elementor data, Rank Math meta/schema, cache controls, robots.txt management</li></ul>"
+    "changelog": "<h4>v1.3.1 (2026-03-15)</h4><ul><li><strong>Fix:</strong> Remove LiteSpeed Cache from required plugins in preflight check — intentionally disabled on most sites</li><li><strong>Fix:</strong> Silent auto-update enabled for all sites</li></ul><h4>v1.3.0 (2026-03-15)</h4><ul><li><strong>New:</strong> Post Dates, Bulk Dates, Post Audit, Sideload Media, Preflight, Auto-updater</li></ul>"
 }
