@@ -72,6 +72,9 @@ class Spilt_MCP_Auto_Updater {
         add_filter( 'plugins_api', array( $this, 'plugin_info' ), 10, 3 );
         add_action( 'upgrader_process_complete', array( $this, 'clear_cache' ), 10, 2 );
 
+        // Enable silent auto-updates — no manual approval needed
+        add_filter( 'auto_update_plugin', array( $this, 'enable_auto_update' ), 10, 2 );
+
         // Add "Check for updates" link on plugins page
         add_filter( 'plugin_action_links_' . $this->plugin_basename, array( $this, 'add_action_links' ) );
     }
@@ -193,6 +196,17 @@ class Spilt_MCP_Auto_Updater {
         if ( isset( $options['plugins'] ) && in_array( $this->plugin_basename, $options['plugins'], true ) ) {
             delete_transient( $this->cache_key );
         }
+    }
+
+    /**
+     * Enable automatic updates for this plugin.
+     * WordPress will install new versions silently during its twice-daily cron.
+     */
+    public function enable_auto_update( $update, $item ) {
+        if ( isset( $item->plugin ) && $item->plugin === $this->plugin_basename ) {
+            return true;
+        }
+        return $update;
     }
 
     /**
