@@ -155,6 +155,73 @@ class Spilt_MCP_Preflight_API {
         }
         $checks['rankmath'] = $rm_config;
 
+        // 6b. Category and tag base
+        $category_base = get_option( 'category_base', '' );
+        $tag_base      = get_option( 'tag_base', '' );
+        $cat_base_ok   = ( $category_base === 'blog/category' );
+        $tag_base_ok   = ( $tag_base === 'blog/tag' );
+
+        $checks['taxonomy_bases'] = array(
+            'category_base' => $category_base ?: '(default: /category/)',
+            'category_pass' => $cat_base_ok,
+            'category_expect' => 'blog/category',
+            'tag_base'      => $tag_base ?: '(default: /tag/)',
+            'tag_pass'      => $tag_base_ok,
+            'tag_expect'    => 'blog/tag',
+        );
+        if ( ! $cat_base_ok ) {
+            $warnings[] = "Category base is '{$category_base}' — should be 'blog/category' to avoid namespace collisions with service pages.";
+        }
+        if ( ! $tag_base_ok ) {
+            $warnings[] = "Tag base is '{$tag_base}' — should be 'blog/tag' to keep tags under the /blog/ namespace.";
+        }
+
+        // 6c. Rank Math noindex settings for archives
+        if ( defined( 'RANK_MATH_VERSION' ) ) {
+            $rm_titles = get_option( 'rank-math-options-titles', array() );
+
+            $cat_robots  = isset( $rm_titles['tax_category_robots'] ) ? $rm_titles['tax_category_robots'] : array();
+            $tag_robots  = isset( $rm_titles['tax_post_tag_robots'] ) ? $rm_titles['tax_post_tag_robots'] : array();
+            $author_archive = isset( $rm_titles['disable_author_archives'] ) ? $rm_titles['disable_author_archives'] : 'off';
+            $date_archive   = isset( $rm_titles['disable_date_archives'] ) ? $rm_titles['disable_date_archives'] : 'off';
+
+            $cat_noindex    = is_array( $cat_robots ) && in_array( 'noindex', $cat_robots, true );
+            $tag_noindex    = is_array( $tag_robots ) && in_array( 'noindex', $tag_robots, true );
+
+            $checks['archive_noindex'] = array(
+                'categories_noindex' => $cat_noindex,
+                'tags_noindex'       => $tag_noindex,
+                'author_disabled'    => ( $author_archive === 'on' ),
+                'date_disabled'      => ( $date_archive === 'on' ),
+            );
+
+            if ( ! $cat_noindex ) {
+                $warnings[] = "Category archives are indexed — set to 'noindex, follow' in Rank Math to prevent thin content and collisions with service pages.";
+            }
+            if ( ! $tag_noindex ) {
+                $warnings[] = "Tag archives are indexed — set to 'noindex, follow' in Rank Math to prevent thin duplicate content.";
+            }
+        }
+
+        // 6d. Check for category/service page slug collisions
+        $service_slugs = array();
+        $pages = get_pages( array( 'post_status' => 'publish' ) );
+        foreach ( $pages as $page ) {
+            $service_slugs[] = $page->post_name;
+        }
+        $collisions = array();
+        foreach ( $all_categories as $cat ) {
+            if ( in_array( $cat->slug, $service_slugs, true ) ) {
+                $collisions[] = $cat->slug;
+            }
+        }
+        if ( ! empty( $collisions ) ) {
+            $checks['slug_collisions'] = $collisions;
+            $errors[] = "Category slugs collide with page slugs: " . implode( ', ', $collisions ) . ". Rename the category or page to avoid routing conflicts.";
+        } else {
+            $checks['slug_collisions'] = array();
+        }
+
         // 7. WordPress REST API accessible
         $checks['rest_api'] = array(
             'url'  => rest_url( 'wp/v2/posts' ),

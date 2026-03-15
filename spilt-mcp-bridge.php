@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Spilt MCP Bridge
  * Description: REST API extensions for WordPress MCP server — Elementor data, Rank Math meta, cache controls, robots.txt, post date overrides, media sideloading, post audits, and site preflight checks.
- * Version: 1.3.1
+ * Version: 1.4.0
  * Author: Spilt Media
  * Requires at least: 5.6
  * Requires PHP: 7.4
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'SPILT_MCP_VERSION', '1.3.1' );
+define( 'SPILT_MCP_VERSION', '1.4.0' );
 define( 'SPILT_MCP_PATH', plugin_dir_path( __FILE__ ) );
 
 // Load endpoint classes
