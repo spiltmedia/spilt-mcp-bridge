@@ -1,6 +1,6 @@
 {
     "version": "2.0.0",
-    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.0/spilt-mcp-bridge.zip",
+    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.0/spilt-mcp-bridge-2.0.0.zip",
     "homepage": "https://spiltmedia.com",
     "requires": "5.6",
     "requires_php": "7.4",
