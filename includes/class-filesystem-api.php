@@ -5,12 +5,13 @@
  * Read and write theme/plugin files, inspect wp-config, browse directories.
  * Restricted to wp-content directory for safety (no writing to wp-core).
  *
- * GET  /spilt-mcp/v1/filesystem/read           — read a file
- * POST /spilt-mcp/v1/filesystem/write           — write/update a file
- * GET  /spilt-mcp/v1/filesystem/browse          — list directory contents
- * GET  /spilt-mcp/v1/filesystem/wp-config       — read wp-config (sanitized, no credentials)
- * GET  /spilt-mcp/v1/filesystem/htaccess        — read .htaccess
- * POST /spilt-mcp/v1/filesystem/htaccess        — write .htaccess
+ * GET    /spilt-mcp/v1/filesystem/read           — read a file
+ * POST   /spilt-mcp/v1/filesystem/write           — write/update a file
+ * DELETE /spilt-mcp/v1/filesystem/delete          — delete a file or folder
+ * GET    /spilt-mcp/v1/filesystem/browse          — list directory contents
+ * GET    /spilt-mcp/v1/filesystem/wp-config       — read wp-config (sanitized, no credentials)
+ * GET    /spilt-mcp/v1/filesystem/htaccess        — read .htaccess
+ * POST   /spilt-mcp/v1/filesystem/htaccess        — write .htaccess
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,6 +33,12 @@ class Spilt_MCP_Filesystem_API {
         register_rest_route( 'spilt-mcp/v1', '/filesystem/write', array(
             'methods'             => 'POST',
             'callback'            => array( $this, 'write_file' ),
+            'permission_callback' => 'spilt_mcp_admin_check',
+        ) );
+
+        register_rest_route( 'spilt-mcp/v1', '/filesystem/delete', array(
+            'methods'             => 'DELETE',
+            'callback'            => array( $this, 'delete_path' ),
             'permission_callback' => 'spilt_mcp_admin_check',
         ) );
 
@@ -145,6 +152,66 @@ class Spilt_MCP_Filesystem_API {
             'path'    => $rel_path,
             'bytes'   => $written,
             'backup'  => $backup ? basename( $backup ) : null,
+        ) );
+    }
+
+    /**
+     * DELETE: Delete a file or directory inside wp-content.
+     *
+     * Body: { "path": "plugins/old-plugin-folder", "confirm": true }
+     */
+    public function delete_path( $request ) {
+        $body    = $request->get_json_params();
+        $rel_path = isset( $body['path'] ) ? sanitize_text_field( $body['path'] ) : '';
+        $confirm  = isset( $body['confirm'] ) ? (bool) $body['confirm'] : false;
+
+        if ( empty( $rel_path ) ) {
+            return new WP_Error( 'missing_path', 'Provide "path" relative to wp-content.', array( 'status' => 400 ) );
+        }
+
+        if ( ! $confirm ) {
+            return new WP_Error( 'not_confirmed', 'Set "confirm": true to proceed. This is destructive.', array( 'status' => 400 ) );
+        }
+
+        $result = $this->resolve_safe_path( $rel_path, 'wp-content' );
+        if ( is_wp_error( $result ) ) return $result;
+
+        if ( ! file_exists( $result ) ) {
+            return new WP_Error( 'not_found', 'Path not found.', array( 'status' => 404 ) );
+        }
+
+        // Block deleting the MCP Bridge plugin itself
+        $mcp_dir = dirname( SPILT_MCP_PATH );
+        if ( realpath( $result ) === realpath( $mcp_dir ) || strpos( realpath( $result ), realpath( $mcp_dir ) . DIRECTORY_SEPARATOR ) === 0 ) {
+            return new WP_Error( 'self_delete', 'Cannot delete the MCP Bridge plugin via API.', array( 'status' => 403 ) );
+        }
+
+        // Block deleting top-level wp-content directories (plugins/, themes/, uploads/)
+        $top_level_protected = array( 'plugins', 'themes', 'uploads', 'mu-plugins' );
+        $trimmed = trim( $rel_path, '/' );
+        if ( in_array( $trimmed, $top_level_protected, true ) ) {
+            return new WP_Error( 'protected_dir', "Cannot delete the entire '{$trimmed}' directory.", array( 'status' => 403 ) );
+        }
+
+        if ( is_dir( $result ) ) {
+            // Use WP_Filesystem for recursive directory deletion
+            global $wp_filesystem;
+            if ( ! function_exists( 'WP_Filesystem' ) ) {
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+            }
+            WP_Filesystem();
+            $deleted = $wp_filesystem->delete( $result, true );
+        } else {
+            $deleted = unlink( $result );
+        }
+
+        if ( ! $deleted ) {
+            return new WP_Error( 'delete_failed', 'Could not delete. Check permissions.', array( 'status' => 500 ) );
+        }
+
+        return rest_ensure_response( array(
+            'success' => true,
+            'deleted' => $rel_path,
         ) );
     }
 
