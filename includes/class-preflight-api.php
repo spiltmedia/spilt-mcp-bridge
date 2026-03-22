@@ -191,8 +191,8 @@ class Spilt_MCP_Preflight_API {
             $checks['archive_noindex'] = array(
                 'categories_noindex' => $cat_noindex,
                 'tags_noindex'       => $tag_noindex,
-                'author_disabled'    => ( $author_archive === 'on' ),
-                'date_disabled'      => ( $date_archive === 'on' ),
+                'author_disabled'    => in_array( $author_archive, array( 'on', '1' ), true ),
+                'date_disabled'      => in_array( $date_archive, array( 'on', '1' ), true ),
             );
 
             if ( ! $cat_noindex ) {
