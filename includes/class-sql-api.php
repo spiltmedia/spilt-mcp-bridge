@@ -24,7 +24,7 @@ class Spilt_MCP_SQL_API {
     private $allowed_write = array( 'UPDATE', 'DELETE', 'INSERT' );
     private $blocked_keywords = array(
         'DROP', 'TRUNCATE', 'ALTER', 'CREATE', 'GRANT', 'REVOKE', 'RENAME',
-        'OUTFILE', 'INFILE', 'DUMPFILE', 'LOAD', 'EXECUTE', 'CALL', 'SET',
+        'OUTFILE', 'INFILE', 'DUMPFILE', 'LOAD', 'EXECUTE', 'CALL',
     );
 
     public function register_routes() {
