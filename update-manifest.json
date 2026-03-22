@@ -1,10 +1,10 @@
 {
-    "version": "2.0.0",
-    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.0/spilt-mcp-bridge-2.0.0.zip",
+    "version": "2.0.1",
+    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.1/spilt-mcp-bridge-2.0.1.zip",
     "homepage": "https://spiltmedia.com",
     "requires": "5.6",
     "requires_php": "7.4",
-    "tested": "6.7",
-    "last_updated": "2026-03-16",
-    "changelog": "<h4>v2.0.0 (2026-03-16)</h4><ul><li><strong>Major:</strong> Full browserless wp-admin control — 26 new REST API endpoints</li><li>Bulk audit, schema, and Rank Math meta operations</li><li>Content search/grep and search-replace across all posts</li><li>Rank Math redirections CRUD (single + bulk)</li><li>Plugin activate/deactivate/update, theme switch</li><li>Menu, sitemap, options, maintenance, cron, user audit</li><li>Webhooks, GSC proxy via Site Kit, debug log, filesystem, SQL</li><li>Comment moderation, widgets, theme mods, rewrite rules</li><li><strong>Security:</strong> SQL injection hardening, credential redaction, path traversal fix</li></ul><h4>v1.4.2 (2026-03-15)</h4><ul><li>Added Author URI and Plugin URI links</li></ul>"
+    "tested": "6.9",
+    "last_updated": "2026-03-21",
+    "changelog": "<h4>v2.0.1 (2026-03-21)</h4><ul><li><strong>Fix:</strong> GSC proxy now recognizes Search Console as active when Site Kit is connected (Search Console is Site Kit's implicit core module and may not appear in googlesitekit_active_modules)</li></ul><h4>v2.0.0 (2026-03-16)</h4><ul><li><strong>Major:</strong> Full browserless wp-admin control — 26 new REST API endpoints</li><li>Bulk audit, schema, and Rank Math meta operations</li><li>Content search/grep and search-replace across all posts</li><li>Rank Math redirections CRUD (single + bulk)</li><li>Plugin activate/deactivate/update, theme switch</li><li>Menu, sitemap, options, maintenance, cron, user audit</li><li>Webhooks, GSC proxy via Site Kit, debug log, filesystem, SQL</li><li>Comment moderation, widgets, theme mods, rewrite rules</li><li><strong>Security:</strong> SQL injection hardening, credential redaction, path traversal fix</li></ul>"
 }

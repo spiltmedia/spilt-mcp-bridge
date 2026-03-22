@@ -188,9 +188,11 @@ class Spilt_MCP_GSC_Proxy_API {
             $credentials = get_option( 'googlesitekit_credentials', array() );
             $connected   = ! empty( $credentials );
 
-            // Check if Search Console module is active
+            // Check if Search Console module is active.
+            // Search Console is Site Kit's core module — it is implicitly active
+            // whenever Site Kit is connected, even if not listed in active_modules.
             $active_modules = get_option( 'googlesitekit_active_modules', array() );
-            $search_console = in_array( 'search-console', $active_modules, true );
+            $search_console = $connected || in_array( 'search-console', $active_modules, true );
 
             $owner_data = get_option( 'googlesitekit_owner_id', null );
             if ( $owner_data ) {
