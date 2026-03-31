@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Spilt MCP Bridge
  * Description: REST API extensions for WordPress MCP server — full browserless wp-admin control. Elementor, Rank Math, cache, robots.txt, post dates, media, audits, bulk operations, link audits, content search/replace, redirections, menus, sitemap, options, maintenance, cron, plugins/themes, users, webhooks, and GSC proxy.
- * Version: 2.0.5
+ * Version: 2.0.6
  * Author: Spilt Media
  * Author URI: https://spiltmedia.com
  * Plugin URI: https://spiltmedia.com
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'SPILT_MCP_VERSION', '2.0.5' );
+define( 'SPILT_MCP_VERSION', '2.0.6' );
 define( 'SPILT_MCP_PATH', plugin_dir_path( __FILE__ ) );
 
 // Load endpoint classes
