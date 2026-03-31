@@ -1,10 +1,10 @@
 {
-    "version": "2.0.3",
-    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.3/spilt-mcp-bridge-2.0.3.zip",
+    "version": "2.0.5",
+    "download_url": "https://github.com/spiltmedia/spilt-mcp-bridge/releases/download/v2.0.5/spilt-mcp-bridge-2.0.5.zip",
     "homepage": "https://spiltmedia.com",
     "requires": "5.6",
     "requires_php": "7.4",
     "tested": "6.9",
-    "last_updated": "2026-03-22",
-    "changelog": "<h4>v2.0.3 (2026-03-22)</h4><ul><li><strong>Fix:</strong> Preflight archive_noindex now handles both 'on' and '1' values for disable_author_archives and disable_date_archives (Rank Math uses inconsistent formats)</li></ul><h4>v2.0.2 (2026-03-22)</h4><ul><li><strong>Fix:</strong> SQL endpoint no longer blocks UPDATE..SET queries</li></ul><h4>v2.0.1 (2026-03-21)</h4><ul><li><strong>Fix:</strong> GSC proxy recognizes Search Console as active when Site Kit is connected</li></ul>"
+    "last_updated": "2026-03-31",
+    "changelog": "<h4>v2.0.5 (2026-03-31)</h4><ul><li><strong>New:</strong> POST /cache/litespeed/preset — applies a LiteSpeed preset (default: essentials) using LiteSpeed's own PHP class (LiteSpeed\\Preset::cls()) from within WP context. No SQL writes.</li><li><strong>New:</strong> POST /cache/litespeed/purge — fires litespeed_purge_all and litespeed_api_purge_all action hooks from within WP context.</li></ul><h4>v2.0.4 (2026-03-26)</h4><ul><li>Previous release</li></ul><h4>v2.0.3 (2026-03-22)</h4><ul><li><strong>Fix:</strong> Preflight archive_noindex now handles both 'on' and '1' values for disable_author_archives and disable_date_archives (Rank Math uses inconsistent formats)</li></ul>"
 }

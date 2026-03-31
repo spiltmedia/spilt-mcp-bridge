@@ -66,7 +66,7 @@ class Spilt_MCP_Elementor_API {
 
     /**
      * GET: Return parsed _elementor_data JSON.
-     * Reads directly from DB to bypass WP object cache / LiteSpeed cache.
+     * Reads directly from DB to bypass stale WordPress/object cache layers.
      */
     public function get_data( $request ) {
         $post_id = (int) $request['post_id'];

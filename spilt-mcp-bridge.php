@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Spilt MCP Bridge
  * Description: REST API extensions for WordPress MCP server — full browserless wp-admin control. Elementor, Rank Math, cache, robots.txt, post dates, media, audits, bulk operations, link audits, content search/replace, redirections, menus, sitemap, options, maintenance, cron, plugins/themes, users, webhooks, and GSC proxy.
- * Version: 2.0.3
+ * Version: 2.0.5
  * Author: Spilt Media
  * Author URI: https://spiltmedia.com
  * Plugin URI: https://spiltmedia.com
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'SPILT_MCP_VERSION', '2.0.3' );
+define( 'SPILT_MCP_VERSION', '2.0.5' );
 define( 'SPILT_MCP_PATH', plugin_dir_path( __FILE__ ) );
 
 // Load endpoint classes
@@ -58,6 +58,7 @@ require_once SPILT_MCP_PATH . 'includes/class-comments-api.php';
 require_once SPILT_MCP_PATH . 'includes/class-rewrite-api.php';
 require_once SPILT_MCP_PATH . 'includes/class-transients-api.php';
 require_once SPILT_MCP_PATH . 'includes/class-route-index-api.php';
+require_once SPILT_MCP_PATH . 'includes/class-wordpress-qc-api.php';
 
 // Initialize auto-updater — checks GitHub for new releases every 6 hours.
 // All 29 client sites will see "Update Available" in WP Admin when we push a new release.
@@ -181,6 +182,9 @@ add_action( 'rest_api_init', function () {
     $route_index = new Spilt_MCP_Route_Index_API();
     $route_index->register_routes();
 
+    $wordpress_qc = new Spilt_MCP_WordPress_QC_API();
+    $wordpress_qc->register_routes();
+
     // Health endpoint
     register_rest_route( 'spilt-mcp/v1', '/health', array(
         'methods'             => 'GET',
@@ -214,6 +218,6 @@ function spilt_mcp_health( $request ) {
         'mcp_bridge'        => SPILT_MCP_VERSION,
         'elementor_active'  => defined( 'ELEMENTOR_VERSION' ),
         'rankmath_active'   => defined( 'RANK_MATH_VERSION' ),
-        'litespeed_active'  => defined( 'LSCWP_V' ),
+        'cache_api_available' => true,
     ) );
 }
